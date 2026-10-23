@@ -107,3 +107,27 @@ correlated with the team's full-season point differential per game.
   points are mostly offensive production, and point differential also carries the defense.
 - Rough exchange rate: +1 QB fantasy point per game ≈ +1 point of team point differential
   per game.
+
+## Side study: does early-season point differential predict rest-of-season QB fantasy PPG?
+
+`pointdiff_predicts_qb.py`. Team QB fantasy points per team game (traditional scoring),
+2010–2024, 479 team-seasons. "Early" = weeks 1..C, "late" = weeks C+1..end.
+
+| Cutoff | r: early point diff → late QB PPG | r: early QB PPG → late QB PPG | Both (R) | Point diff adds signal beyond QB's own early PPG? |
+|---|---|---|---|---|
+| wk 5 | 0.40 | 0.54 | 0.57 | yes (p < .001) |
+| wk 7 | 0.41 | 0.56 | 0.58 | yes (p < .001) |
+| wk 9 | 0.40 | 0.55 | 0.57 | yes (p < .001) |
+| wk 12 | 0.37 | 0.53 | 0.53 | yes (p = .02) |
+
+- Early point differential predicts rest-of-season QB fantasy PPG moderately (r ≈ 0.4).
+- The QB's own early fantasy PPG is the better predictor (r ≈ 0.55), as you'd expect.
+- But point differential is not redundant: holding the QB's early PPG fixed, a team with a
+  better point differential still produces more QB fantasy points later. Combined R ≈ 0.57.
+- Same-player check (QB1 through the cutoff who also started 4+ late games): r ≈ 0.4 for
+  point diff, ≈ 0.55 for own early PPG. Same story.
+- Per-season r for point diff → late QB PPG at week 7 ranges 0.07 (2019) to 0.66 (2022);
+  noisy year to year, positive every year.
+
+Reading for fantasy: if two QBs have the same early-season fantasy PPG, take the one on the
+team with the better point differential.
