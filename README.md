@@ -206,6 +206,22 @@ so the gains above are for QBs who held the job; a slumping QB carries some benc
 
 **2024 at week 7, sanity check.** Biggest negative residuals: Minshew, Stafford,
 Richardson, Levis, Mahomes, Bryce Young. Gains the rest of the way: +3.8, +6.7, +6.9, +3.9,
-+6.3, +14.4. Biggest positive residuals: Mayfield, Allen, Love, Lamar, Burrow: −2.8, +6.0,
-−7.5, −0.2, +4.4. The direction is right on the low side; the high side splits between
-real (Allen, Burrow) and not (Love, Mayfield), which is the prior-season point again.
++6.3, +14.4. All six improved. Biggest positive residuals: Mayfield, Allen, Love, Lamar,
+Burrow: −2.8, +6.0, −7.5, −0.2, +4.4. Mixed, as the Q5 average of −2.8 with wide spread
+implies.
+
+Does the prior-season rule explain which hot starts held? Not in 2024, and that is worth
+saying plainly:
+
+| QB | 2023 PPG | 2024 wk 1–7 | early − prior | 2024 wk 8+ |
+|---|---|---|---|---|
+| Mayfield | 16.1 | 23.2 | +7.0 (sell) | 20.4, held |
+| Burrow | 14.7 (10 g) | 19.4 | +4.6 (sell) | 23.7, improved |
+| Lamar | 20.7 | 25.4 | +4.7 (sell) | 25.2, held |
+| Love | 18.8 | 20.6 | +1.8 (hold) | 13.1, collapsed |
+| Allen | 23.2 | 19.9 | −3.3 (buy) | 25.9, improved |
+
+Allen is the one clean confirmation. Mayfield, Burrow and Lamar were all "sells" by the
+rule and all stayed elite; Love was a "hold" and fell apart. The rule is a 300-season
+average with a lot of spread around it, not a season-by-season oracle. Use it as a prior,
+not a verdict.
