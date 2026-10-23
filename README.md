@@ -81,3 +81,29 @@ https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_YYY
 - Pythagorean win expectation vs. point differential.
 - Translate to fantasy: does a fantasy team's "point differential" (points for minus
   points against) outpredict points for alone?
+
+## Side study: QB fantasy scoring vs. team point differential (2010–2024)
+
+`qb_vs_pointdiff.py`. Traditional QB scoring (nflverse `fantasy_points`: 4-pt pass TD,
+−2 INT). QB1 = each team's leading passer by attempts; his fantasy PPG over games played,
+correlated with the team's full-season point differential per game.
+
+| Season | r |   | Season | r |
+|---|---|---|---|---|
+| 2010 | 0.65 | | 2018 | 0.70 |
+| 2011 | 0.70 | | 2019 | 0.53 |
+| 2012 | 0.55 | | 2020 | 0.47 |
+| 2013 | 0.77 | | 2021 | 0.73 |
+| 2014 | 0.67 | | 2022 | 0.57 |
+| 2015 | 0.38 | | 2023 | 0.62 |
+| 2016 | 0.63 | | 2024 | 0.80 |
+| 2017 | 0.64 | | **mean / pooled** | **0.63 / 0.61** |
+
+- Strong and steady: r ≈ 0.6 in a typical year, range 0.38 (2015) to 0.80 (2024), no
+  trend over the 15 years (slope ≈ 0, p = 0.89).
+- Using all of a team's QB fantasy points per team game instead of QB1 gives the same
+  answer (pooled r = 0.61).
+- Correlation with points *scored* is higher still (0.76 pooled), as expected: QB fantasy
+  points are mostly offensive production, and point differential also carries the defense.
+- Rough exchange rate: +1 QB fantasy point per game ≈ +1 point of team point differential
+  per game.
