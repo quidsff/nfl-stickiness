@@ -1,0 +1,3 @@
+data/games.csv
+data/pbp_*.csv.gz
+__pycache__/
