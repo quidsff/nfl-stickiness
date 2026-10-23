@@ -1,94 +1,89 @@
-# NFL metric stickiness: a pilot
+# NFL metric stickiness
 
-**Question.** Which early-season team stats are the "stickiest," meaning they best identify
-rest-of-season success and playoff outcomes? Candidates: points per game, point
-differential, offensive EPA/game, defensive EPA/game, turnover differential. Win% is
-included as the reference everyone already uses.
+This project asks which early-season team statistics tell you the most about how the rest
+of the season will go. It uses [nflverse](https://github.com/nflverse/nflverse-data)
+play-by-play, schedule, and player data. Each section below describes one study, the
+method in plain terms, and what the numbers showed.
 
-**Data.** [nflverse](https://github.com/nflverse/nflverse-data) play-by-play and schedules,
-seasons 2016–2024 (288 team-seasons). Metrics are computed through a cutoff week of the
-regular season (default week 9) and tested against (a) the same metric over the remaining
-regular-season games, and (b) playoff outcomes for that season.
+A note on the numbers. Most results are reported as a correlation, written as r. A
+correlation measures how closely two things move together. It runs from 0, meaning no
+relationship, to 1, meaning a perfect one. Some results use AUC instead. AUC measures how
+well a statistic ranks teams that reach an outcome above teams that do not. A score of 0.5
+means the ranking is a coin flip, and 1.0 means it is perfect.
 
-## Findings (through week 9)
+## Study 1: which team statistics stick from the first half of the season to the second?
 
-**1. Point differential and offensive EPA are the stickiest. Turnover differential barely sticks at all.**
+**The question.** At the midpoint of a season, which team statistic best identifies a team
+that will keep succeeding? The candidates were points per game, point differential per
+game, offensive EPA per game, defensive EPA per game, and turnover differential per game.
+Win percentage is included because it is the statistic everyone already uses.
 
-| Metric (wks 1–9) | r with same metric, wks 10+ |
+**The method.** The study covers the 2016 through 2024 seasons, which gives 288
+team-seasons. Each statistic was computed through week 9, then compared against the same
+statistic over the rest of the regular season. The study then checked how well each
+statistic ranked teams on five playoff outcomes: making the playoffs, winning in the
+wild-card round, reaching the conference championship, reaching the Super Bowl, and
+winning it.
+
+**Finding 1. Point differential and offensive EPA stick best. Turnover differential barely sticks at all.**
+
+| Statistic through week 9 | Correlation with the same statistic from week 10 on |
 |---|---|
-| Off EPA/game | 0.53 |
-| Point diff/game | 0.51 |
-| Points/game | 0.48 |
-| Win % | 0.41 |
-| Def EPA/game | 0.36 |
-| **TO diff/game** | **0.12** |
+| Offensive EPA per game | 0.53 |
+| Point differential per game | 0.51 |
+| Points per game | 0.48 |
+| Win percentage | 0.41 |
+| Defensive EPA per game | 0.36 |
+| **Turnover differential per game** | **0.12** |
 
-Turnover margin is close to noise from one half of the season to the next. Defense is
-much less stable than offense. This ordering holds at week 5, 7 and 12 cutoffs.
+A team's turnover margin in the first half of the season tells you almost nothing about its
+turnover margin in the second half. Defense holds up far less than offense does. The same
+order appears when the season is cut at week 5, week 7, or week 12.
 
-**2. For playoff outcomes, point differential matches win% and beats everything else; offense beats defense; turnovers are weak.**
+**Finding 2. Point differential predicts playoff outcomes as well as win percentage does, and nothing else comes close.**
 
-AUC (1.0 = perfect ranking, 0.5 = coin flip):
-
-| Metric | Made playoffs | Reached div. round | Reached conf. champ. | Reached SB | Won SB |
+| Statistic | Made playoffs | Reached divisional round | Reached conference championship | Reached Super Bowl | Won Super Bowl |
 |---|---|---|---|---|---|
-| Win % | 0.89 | 0.84 | 0.85 | 0.90 | 0.89 |
-| Point diff/game | 0.88 | 0.84 | 0.85 | 0.90 | 0.88 |
-| Off EPA/game | 0.78 | 0.80 | 0.84 | 0.87 | 0.85 |
-| Points/game | 0.77 | 0.76 | 0.80 | 0.86 | 0.83 |
-| TO diff/game | 0.73 | 0.67 | 0.64 | 0.68 | 0.67 |
-| Def EPA/game | 0.68 | 0.62 | 0.56 | 0.62 | 0.64 |
+| Win percentage | 0.89 | 0.84 | 0.85 | 0.90 | 0.89 |
+| Point differential per game | 0.88 | 0.84 | 0.85 | 0.90 | 0.88 |
+| Offensive EPA per game | 0.78 | 0.80 | 0.84 | 0.87 | 0.85 |
+| Points per game | 0.77 | 0.76 | 0.80 | 0.86 | 0.83 |
+| Turnover differential per game | 0.73 | 0.67 | 0.64 | 0.68 | 0.67 |
+| Defensive EPA per game | 0.68 | 0.62 | 0.56 | 0.62 | 0.64 |
 
-Caveat on win%: the week-1–9 record is literally part of the thing being predicted for
-"made playoffs," so its edge there is partly baked in. That point differential ties it
-anyway, with no such advantage, is the real result. Note also that offensive EPA closes the
-gap with win% as the rounds get deeper (0.78 → 0.85), while defensive EPA says almost
-nothing about who advances once you're in.
+Win percentage has an unfair advantage in this table. A team's record through week 9 is
+part of the record that decides whether it makes the playoffs, so win percentage gets
+credit for something it already contains. Point differential has no such advantage and
+ties it anyway. That is the real result. Offensive EPA also gains ground as the rounds get
+deeper, rising from 0.78 to 0.85, while defensive EPA tells you almost nothing about who
+advances once the playoffs begin.
 
-**3. Stacking metrics adds little over point differential.** Leave-one-season-out logistic
-regression for made_playoffs: win% alone 0.410 log loss; win% + point diff 0.398; all six
-metrics 0.395. Once you have point differential, the other stats are mostly redundant.
+**Finding 3. Combining statistics adds little once you have point differential.** A model
+that predicts playoff berths from win percentage alone scores 0.410 on log loss, where a
+lower score is better. Adding point differential improves it to 0.398. Adding all six
+statistics only reaches 0.395. Once you know a team's point differential, the other numbers
+mostly repeat what it already told you.
 
-## Takeaways for the fantasy/tier argument
+**What this means for ranking fantasy teams.** Point differential per game is the single
+best measure of how good a team really is. It holds up over time, it predicts what comes
+next, and no other statistic adds much to it. Points scored works as a stand-in, and it is
+the number fantasy managers actually see, but it trails point differential because it
+ignores the other side of the ball. Turnover differential is the classic statistic that
+regresses, because it is nearly all luck from one half of the season to the next. A strong
+first-half defense is a weaker bet to stay strong than a strong first-half offense.
 
-- Point differential per game is the single best "how good are you really" number: it
-  sticks, it predicts, and nothing else adds much to it.
-- Points scored is a decent stand-in and is the stat fantasy managers actually see, but it
-  trails point differential because it ignores the other side of the ball.
-- Turnover differential is the classic "regression candidate" stat. It is almost pure luck
-  half-season to half-season.
-- Defense is less predictable than offense; a great first-half defense is a weaker bet to
-  stay great than a great first-half offense.
+## Study 2: how closely does a quarterback's fantasy scoring track his team's point differential?
 
-## Reproduce
+**The method.** The study covers the 2010 through 2024 seasons and uses traditional
+quarterback scoring, which awards four points per passing touchdown and subtracts two per
+interception. Each team's leading passer by attempts counts as its starter. His fantasy
+points per game were compared against the team's point differential per game over the
+full regular season.
 
-```
-python3 build_team_games.py      # builds data/team_games.csv from nflverse files in data/
-python3 pilot.py 9               # cutoff week; writes results_week9.csv and team_seasons_week9.csv
-```
+**The finding.** The two track each other closely and the relationship has not changed in
+fifteen years.
 
-Raw nflverse files (`games.csv`, `pbp_YYYY.csv.gz`) go in `data/` and are not committed:
-
-```
-https://github.com/nflverse/nflverse-data/releases/download/schedules/games.csv
-https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_YYYY.csv.gz
-```
-
-## Next steps
-
-- Extend to 1999–2024 for a bigger sample and check whether the ordering has drifted.
-- Per-play rather than per-game EPA, and success rate, which may be stickier than raw EPA.
-- Pythagorean win expectation vs. point differential.
-- Translate to fantasy: does a fantasy team's "point differential" (points for minus
-  points against) outpredict points for alone?
-
-## Side study: QB fantasy scoring vs. team point differential (2010–2024)
-
-`qb_vs_pointdiff.py`. Traditional QB scoring (nflverse `fantasy_points`: 4-pt pass TD,
-−2 INT). QB1 = each team's leading passer by attempts; his fantasy PPG over games played,
-correlated with the team's full-season point differential per game.
-
-| Season | r |   | Season | r |
+| Season | Correlation | | Season | Correlation |
 |---|---|---|---|---|
 | 2010 | 0.65 | | 2018 | 0.70 |
 | 2011 | 0.70 | | 2019 | 0.53 |
@@ -97,131 +92,171 @@ correlated with the team's full-season point differential per game.
 | 2014 | 0.67 | | 2022 | 0.57 |
 | 2015 | 0.38 | | 2023 | 0.62 |
 | 2016 | 0.63 | | 2024 | 0.80 |
-| 2017 | 0.64 | | **mean / pooled** | **0.63 / 0.61** |
+| 2017 | 0.64 | | **Average** | **0.63** |
 
-- Strong and steady: r ≈ 0.6 in a typical year, range 0.38 (2015) to 0.80 (2024), no
-  trend over the 15 years (slope ≈ 0, p = 0.89).
-- Using all of a team's QB fantasy points per team game instead of QB1 gives the same
-  answer (pooled r = 0.61).
-- Correlation with points *scored* is higher still (0.76 pooled), as expected: QB fantasy
-  points are mostly offensive production, and point differential also carries the defense.
-- Rough exchange rate: +1 QB fantasy point per game ≈ +1 point of team point differential
-  per game.
+A typical season lands near 0.6. The weakest year was 2015 at 0.38 and the strongest was
+2024 at 0.80, and there is no trend up or down across the period. Counting every
+quarterback who played for the team, rather than only the starter, gives the same answer.
+The correlation with points scored is higher still, at 0.76, which makes sense because a
+quarterback's fantasy points come from offense alone while point differential also
+reflects the defense. As a rough exchange rate, one extra fantasy point per game from the
+quarterback goes with one extra point of team point differential per game.
 
-## Side study: does early-season point differential predict rest-of-season QB fantasy PPG?
+## Study 3: does a team's early point differential predict its quarterback's fantasy scoring later in the season?
 
-`pointdiff_predicts_qb.py`. Team QB fantasy points per team game (traditional scoring),
-2010–2024, 479 team-seasons. "Early" = weeks 1..C, "late" = weeks C+1..end.
+**The method.** For each team and season from 2010 through 2024, the study took the team's
+point differential per game through a cutoff week and compared it with the team's
+quarterback fantasy points per game over the remaining weeks. It then asked whether point
+differential still mattered once the quarterback's own early fantasy scoring was known.
 
-| Cutoff | r: early point diff → late QB PPG | r: early QB PPG → late QB PPG | Both (R) | Point diff adds signal beyond QB's own early PPG? |
+**The finding.** Early point differential predicts later quarterback scoring moderately, and
+it adds information that the quarterback's own numbers do not contain.
+
+| Cutoff week | Point differential predicts later QB scoring | QB's own early scoring predicts later QB scoring | Both together | Does point differential add signal? |
 |---|---|---|---|---|
-| wk 5 | 0.40 | 0.54 | 0.57 | yes (p < .001) |
-| wk 7 | 0.41 | 0.56 | 0.58 | yes (p < .001) |
-| wk 9 | 0.40 | 0.55 | 0.57 | yes (p < .001) |
-| wk 12 | 0.37 | 0.53 | 0.53 | yes (p = .02) |
+| 5 | 0.40 | 0.54 | 0.57 | Yes |
+| 7 | 0.41 | 0.56 | 0.58 | Yes |
+| 9 | 0.40 | 0.55 | 0.57 | Yes |
+| 12 | 0.37 | 0.53 | 0.53 | Yes |
 
-- Early point differential predicts rest-of-season QB fantasy PPG moderately (r ≈ 0.4).
-- The QB's own early fantasy PPG is the better predictor (r ≈ 0.55), as you'd expect.
-- But point differential is not redundant: holding the QB's early PPG fixed, a team with a
-  better point differential still produces more QB fantasy points later. Combined R ≈ 0.57.
-- Same-player check (QB1 through the cutoff who also started 4+ late games): r ≈ 0.4 for
-  point diff, ≈ 0.55 for own early PPG. Same story.
-- Per-season r for point diff → late QB PPG at week 7 ranges 0.07 (2019) to 0.66 (2022);
-  noisy year to year, positive every year.
+The quarterback's own early scoring is the better predictor, which is what you would
+expect. Point differential is not redundant, though. If two quarterbacks have scored the
+same so far, the one on the team with the better point differential scores more the rest
+of the way. The result holds when the study is restricted to quarterbacks who kept the
+same starting job all season. Season by season the strength varies, from 0.07 in 2019 to
+0.66 in 2022, but the direction is positive every year.
 
-Reading for fantasy: if two QBs have the same early-season fantasy PPG, take the one on the
-team with the better point differential.
+## Study 4: what should a quarterback score, given his team?
 
-## Expected QB fantasy PPG from team context
+**The method.** The study fit a straight line through 468 team-seasons from 2010 through
+2024, relating a starter's fantasy points per game to his team's point differential, to
+its points scored, and to both.
 
-`expected_qb_ppg.py`. Pooled OLS on 468 team-seasons (2010–2024, QB1 with 8+ games,
-traditional scoring).
+**The finding.** Points scored predicts quarterback fantasy output far better than point
+differential does, and combining the two adds nothing.
 
-| Model | Equation | R² | RMSE |
+| Based on | Formula | Share of variation explained | Typical miss |
 |---|---|---|---|
-| A: point differential | QB PPG = 16.0 + 0.38 × (point diff / game) | 0.37 | 3.1 |
-| B: points scored | QB PPG = 0.8 + 0.67 × (team points / game) | 0.57 | 2.5 |
-| C: both | adds nothing over B (point-diff coefficient ≈ 0) | 0.58 | 2.5 |
+| Point differential | QB PPG = 16.0 + 0.38 × (point differential per game) | 37% | 3.1 points |
+| Points scored | QB PPG = 0.8 + 0.67 × (team points per game) | 57% | 2.5 points |
+| Both | adds nothing over points scored | 58% | 2.5 points |
 
-Points scored is the better predictor of QB fantasy output, by a lot: a team's point
-differential tells you about its defense too, which the QB doesn't get paid for.
-Rule of thumb: **expected QB1 PPG ≈ two-thirds of the team's points per game.** A 24
-ppg offense should carry a ~17 PPG QB; a 30 ppg offense a ~21 PPG QB. Typical miss ±2.5.
+The rule of thumb is that a starting quarterback should score about two-thirds of his
+team's points per game in fantasy points. An offense that scores 24 points a game should
+carry a quarterback near 17 fantasy points a game, and an offense that scores 30 should
+carry one near 21. The file `expected_qb_ppg.csv` lists every starter since 2010 with his
+expected score and the gap between his actual and expected score. A positive gap means the
+quarterback produces more fantasy points than his team's scoring implies, usually because
+he runs or throws a large share of the touchdowns. A negative gap means the offense scores
+without him, through the run game, the defense, or short fields.
 
-`expected_qb_ppg.csv` has every QB1 2010–2024 with expected PPG and the residual
-(actual − expected). Positive residual = the QB produces more fantasy points than his
-team's scoring implies (rushing, high TD share); negative = the offense scores without
-him (run game, defense/special teams, short fields).
+## Study 5: how do you spot a quarterback who is due to improve?
 
-## Buy-low QBs: what actually predicts positive regression
+**The question.** A common theory says that touchdown and interception luck evens out, so a
+quarterback with a poor touchdown rate is a buy. This study tested that theory and found a
+better one.
 
-`qb_buy_low.py` (cutoff week 7, 2010–2024, 413 QB-seasons with 4+ games and 60+ attempts
-on each side). The hypothesis was "TD/INT luck reverts, so a QB with a bad TD rate is a
-buy." That is mostly wrong. What works is simpler.
+**The method.** The study covers 2010 through 2024 and uses week 7 as the cutoff. It
+includes 413 quarterback-seasons in which the player had at least four games and sixty
+attempts on each side of the cutoff. It first measured which parts of a quarterback's
+statistical line carry over from the first half of the season to the second. It then built
+an expected score from the parts that carry over and tested whether the gap between a
+player's actual and expected score predicted his scoring in the second half. Finally, it
+tested whether the player's scoring from the previous season predicted anything.
 
-**Component stickiness, weeks 1–7 vs 8+, same QB**
+**Finding 1. Rushing volume carries over almost perfectly, and touchdown rate carries over more than the theory assumes.**
 
-| Component | r | | Component | r |
-|---|---|---|---|---|
-| Carries/game | 0.84 | | Pass TD rate | 0.38 |
-| Rush yds/game | 0.82 | | Rush TD rate | 0.17 |
-| Attempts/game | 0.48 | | INT rate | 0.16 |
-| Yards/attempt | 0.42 | | Fantasy PPG | 0.55 |
-
-Rushing volume is the stickiest thing a QB does, by a mile. Pass TD rate is a real skill
-(0.38), not noise. INT rate and rush TD rate are noise.
-
-**Does a "luck residual" predict rest-of-season gain?** No. Late PPG ~ early PPG +
-residual (actual − expected from volume/yardage with league-average TD/INT rates): the
-residual's coefficient is +0.08, p = 0.50. Splitting into TD luck and INT luck: both n.s.
-Once you know a QB's early PPG, knowing *why* it was high or low adds nothing.
-
-**What does add signal:**
-
-| Model for late PPG | R² |
+| Part of the line | Correlation, weeks 1–7 vs. weeks 8 on |
 |---|---|
-| early PPG | 0.30 |
-| early PPG + prior-season PPG | 0.33 |
-| early PPG + prior-season PPG + carries/game | 0.35 |
+| Carries per game | 0.84 |
+| Rushing yards per game | 0.82 |
+| Fantasy points per game | 0.55 |
+| Attempts per game | 0.48 |
+| Yards per attempt | 0.42 |
+| Passing touchdown rate | 0.38 |
+| Rushing touchdown rate | 0.17 |
+| Interception rate | 0.16 |
 
-Prior-season PPG (β = +0.21, p < .001) and rushing volume (β = +0.33 per carry/game,
-p = .001) both matter on top of early PPG. Luck does not.
+How often a quarterback runs is the most stable thing about him. Passing touchdown rate is
+a real skill, not noise. Interception rate and rushing touchdown rate are noise.
 
-**The buy-low rule that the data supports:** sort by (early PPG − last season's PPG).
+**Finding 2. The luck gap predicts nothing.** Once you know a quarterback's early fantasy
+scoring, knowing whether it came from good or bad touchdown and interception luck adds no
+information about the rest of his season. The theory that bad luck evens out does not hold
+up for fantasy purposes.
 
-| Early PPG vs last season | n | prior | early | late | gain | top-12 QB rest of way |
+**Finding 3. Last season's scoring and rushing volume do add information.** A model that
+predicts second-half scoring from first-half scoring alone explains 30% of the variation.
+Adding last season's scoring raises that to 33%, and adding carries per game raises it to
+35%. Both additions are reliable.
+
+**The rule the data supports.** Compare a quarterback's early-season scoring with his
+scoring from the previous season.
+
+| Early scoring vs. last season | Players | Last season | Weeks 1–7 | Weeks 8 on | Change | Finished as a top-12 QB |
 |---|---|---|---|---|---|---|
-| Q1 biggest drop (−5.4) | 61 | 18.7 | 13.4 | 16.1 | **+2.7** | 49% |
-| Q2 (−2.1) | 60 | 17.8 | 15.8 | 15.6 | −0.2 | 45% |
-| Q3 (0.0) | 60 | 16.4 | 16.4 | 15.3 | −1.1 | 45% |
-| Q4 (+2.3) | 60 | 16.2 | 18.4 | 16.9 | −1.6 | 63% |
-| Q5 biggest jump (+6.3) | 60 | 14.8 | 21.1 | 18.3 | **−2.8** | 77% |
+| Fell the most (5.4 points below) | 61 | 18.7 | 13.4 | 16.1 | **+2.7** | 49% |
+| Fell some (2.1 below) | 60 | 17.8 | 15.8 | 15.6 | −0.2 | 45% |
+| About the same | 60 | 16.4 | 16.4 | 15.3 | −1.1 | 45% |
+| Rose some (2.3 above) | 60 | 16.2 | 18.4 | 16.9 | −1.6 | 63% |
+| Rose the most (6.3 above) | 60 | 14.8 | 21.1 | 18.3 | **−2.8** | 77% |
 
-QBs scoring 5+ PPG below last year gain ~2.7 PPG the rest of the way and finish as a
-top-12 QB half the time, despite looking like QB2s at the cutoff. Breakout QBs give back
-~2.8 PPG but still mostly stay top-12: a jump is partly real, a slump is mostly not.
+Quarterbacks who were scoring five or more points below their previous season gained
+about 2.7 points per game the rest of the way, and half of them finished as top-12
+quarterbacks even though they looked like backups at the cutoff. Quarterbacks who broke
+out gave back about 2.8 points per game but mostly stayed in the top 12. A hot start is
+partly real, and a slump is mostly not.
 
-**Survivorship.** 83% of the "unluckiest" quintile kept starting vs 92% of the luckiest,
-so the gains above are for QBs who held the job; a slumping QB carries some bench risk.
+**A caution about benchings.** Among the quarterbacks with the worst luck, 83% kept their
+starting job through the second half, compared with 92% of those with the best luck. The
+gains above belong to the players who held the job, so a slumping quarterback carries some
+risk of being benched.
 
-**2024 at week 7, sanity check.** Biggest negative residuals: Minshew, Stafford,
-Richardson, Levis, Mahomes, Bryce Young. Gains the rest of the way: +3.8, +6.7, +6.9, +3.9,
-+6.3, +14.4. All six improved. Biggest positive residuals: Mayfield, Allen, Love, Lamar,
-Burrow: −2.8, +6.0, −7.5, −0.2, +4.4. Mixed, as the Q5 average of −2.8 with wide spread
-implies.
+**A check against 2024.** The six quarterbacks with the worst luck through week 7 were
+Minshew, Stafford, Richardson, Levis, Mahomes, and Bryce Young. All six improved the rest
+of the way, by 3.8, 6.7, 6.9, 3.9, 6.3, and 14.4 points per game. The five with the best
+luck were Mayfield, Allen, Love, Lamar Jackson, and Burrow, and their results were mixed:
+−2.8, +6.0, −7.5, −0.2, and +4.4.
 
-Does the prior-season rule explain which hot starts held? Not in 2024, and that is worth
-saying plainly:
+The previous-season rule did not sort the 2024 hot starts well, and that is worth stating
+plainly.
 
-| QB | 2023 PPG | 2024 wk 1–7 | early − prior | 2024 wk 8+ |
+| Quarterback | 2023 | 2024 through week 7 | Gap from 2023 | 2024 from week 8 |
 |---|---|---|---|---|
-| Mayfield | 16.1 | 23.2 | +7.0 (sell) | 20.4, held |
-| Burrow | 14.7 (10 g) | 19.4 | +4.6 (sell) | 23.7, improved |
-| Lamar | 20.7 | 25.4 | +4.7 (sell) | 25.2, held |
-| Love | 18.8 | 20.6 | +1.8 (hold) | 13.1, collapsed |
-| Allen | 23.2 | 19.9 | −3.3 (buy) | 25.9, improved |
+| Mayfield | 16.1 | 23.2 | +7.0, a sell | 20.4, held |
+| Burrow | 14.7 in 10 games | 19.4 | +4.6, a sell | 23.7, improved |
+| Lamar Jackson | 20.7 | 25.4 | +4.7, a sell | 25.2, held |
+| Love | 18.8 | 20.6 | +1.8, a hold | 13.1, collapsed |
+| Allen | 23.2 | 19.9 | −3.3, a buy | 25.9, improved |
 
-Allen is the one clean confirmation. Mayfield, Burrow and Lamar were all "sells" by the
-rule and all stayed elite; Love was a "hold" and fell apart. The rule is a 300-season
-average with a lot of spread around it, not a season-by-season oracle. Use it as a prior,
-not a verdict.
+Allen is the only clean confirmation. Mayfield, Burrow, and Jackson all counted as sells
+under the rule and all stayed elite, while Love counted as a hold and fell apart. The rule
+describes an average across three hundred seasons with a lot of spread around it. Treat it
+as a starting point, not a verdict.
+
+## Reproduce
+
+```
+python3 build_team_games.py        # builds data/team_games.csv from nflverse files in data/
+python3 pilot.py 9                 # Study 1, with the cutoff week as the argument
+python3 qb_vs_pointdiff.py         # Study 2
+python3 pointdiff_predicts_qb.py   # Study 3
+python3 expected_qb_ppg.py         # Study 4
+python3 qb_buy_low.py 7            # Study 5, with the cutoff week as the argument
+```
+
+The raw nflverse files are not committed. Place them in `data/` from these addresses:
+
+```
+https://github.com/nflverse/nflverse-data/releases/download/schedules/games.csv
+https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_YYYY.csv.gz
+https://github.com/nflverse/nflverse-data/releases/download/player_stats/player_stats_YYYY.csv
+```
+
+## Next steps
+
+- Extend Study 1 back to 1999 and check whether the ordering has changed over time.
+- Try EPA per play and success rate, which may hold up better than EPA per game.
+- Compare Pythagorean win expectation against point differential.
+- Ask whether a fantasy team's own point differential predicts better than its points scored.
+- Run Study 5 for running backs, receivers, and tight ends.
