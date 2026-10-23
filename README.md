@@ -152,3 +152,60 @@ ppg offense should carry a ~17 PPG QB; a 30 ppg offense a ~21 PPG QB. Typical mi
 (actual − expected). Positive residual = the QB produces more fantasy points than his
 team's scoring implies (rushing, high TD share); negative = the offense scores without
 him (run game, defense/special teams, short fields).
+
+## Buy-low QBs: what actually predicts positive regression
+
+`qb_buy_low.py` (cutoff week 7, 2010–2024, 413 QB-seasons with 4+ games and 60+ attempts
+on each side). The hypothesis was "TD/INT luck reverts, so a QB with a bad TD rate is a
+buy." That is mostly wrong. What works is simpler.
+
+**Component stickiness, weeks 1–7 vs 8+, same QB**
+
+| Component | r | | Component | r |
+|---|---|---|---|---|
+| Carries/game | 0.84 | | Pass TD rate | 0.38 |
+| Rush yds/game | 0.82 | | Rush TD rate | 0.17 |
+| Attempts/game | 0.48 | | INT rate | 0.16 |
+| Yards/attempt | 0.42 | | Fantasy PPG | 0.55 |
+
+Rushing volume is the stickiest thing a QB does, by a mile. Pass TD rate is a real skill
+(0.38), not noise. INT rate and rush TD rate are noise.
+
+**Does a "luck residual" predict rest-of-season gain?** No. Late PPG ~ early PPG +
+residual (actual − expected from volume/yardage with league-average TD/INT rates): the
+residual's coefficient is +0.08, p = 0.50. Splitting into TD luck and INT luck: both n.s.
+Once you know a QB's early PPG, knowing *why* it was high or low adds nothing.
+
+**What does add signal:**
+
+| Model for late PPG | R² |
+|---|---|
+| early PPG | 0.30 |
+| early PPG + prior-season PPG | 0.33 |
+| early PPG + prior-season PPG + carries/game | 0.35 |
+
+Prior-season PPG (β = +0.21, p < .001) and rushing volume (β = +0.33 per carry/game,
+p = .001) both matter on top of early PPG. Luck does not.
+
+**The buy-low rule that the data supports:** sort by (early PPG − last season's PPG).
+
+| Early PPG vs last season | n | prior | early | late | gain | top-12 QB rest of way |
+|---|---|---|---|---|---|---|
+| Q1 biggest drop (−5.4) | 61 | 18.7 | 13.4 | 16.1 | **+2.7** | 49% |
+| Q2 (−2.1) | 60 | 17.8 | 15.8 | 15.6 | −0.2 | 45% |
+| Q3 (0.0) | 60 | 16.4 | 16.4 | 15.3 | −1.1 | 45% |
+| Q4 (+2.3) | 60 | 16.2 | 18.4 | 16.9 | −1.6 | 63% |
+| Q5 biggest jump (+6.3) | 60 | 14.8 | 21.1 | 18.3 | **−2.8** | 77% |
+
+QBs scoring 5+ PPG below last year gain ~2.7 PPG the rest of the way and finish as a
+top-12 QB half the time, despite looking like QB2s at the cutoff. Breakout QBs give back
+~2.8 PPG but still mostly stay top-12: a jump is partly real, a slump is mostly not.
+
+**Survivorship.** 83% of the "unluckiest" quintile kept starting vs 92% of the luckiest,
+so the gains above are for QBs who held the job; a slumping QB carries some bench risk.
+
+**2024 at week 7, sanity check.** Biggest negative residuals: Minshew, Stafford,
+Richardson, Levis, Mahomes, Bryce Young. Gains the rest of the way: +3.8, +6.7, +6.9, +3.9,
++6.3, +14.4. Biggest positive residuals: Mayfield, Allen, Love, Lamar, Burrow: −2.8, +6.0,
+−7.5, −0.2, +4.4. The direction is right on the low side; the high side splits between
+real (Allen, Burrow) and not (Love, Mayfield), which is the prior-season point again.
