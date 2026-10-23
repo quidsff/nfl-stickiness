@@ -217,7 +217,7 @@ Adding last season's scoring raises that to 33%, and adding carries per game rai
 **The rule the data supports.** Compare a quarterback's early-season scoring with his
 scoring from the previous season.
 
-| Early scoring vs. last season | Players | Last season | Weeks 1–7 | Weeks 8 on | Change | Finished as a top-12 QB |
+| Early scoring vs. last season | Players | Last season | Weeks 1–7 | Weeks 8 on | Change | Top-12 QB over weeks 8 on |
 |---|---|---|---|---|---|---|
 | Fell the most (5.4 points below) | 61 | 18.7 | 13.4 | 16.1 | **+2.7** | 49% |
 | Fell some (2.1 below) | 60 | 17.8 | 15.8 | 15.6 | −0.2 | 45% |
@@ -226,8 +226,10 @@ scoring from the previous season.
 | Rose the most (6.3 above) | 60 | 14.8 | 21.1 | 18.3 | **−2.8** | 77% |
 
 Quarterbacks who were scoring five or more points below their previous season gained
-about 2.7 points per game the rest of the way, and half of them finished as top-12
-quarterbacks even though they looked like backups at the cutoff. Quarterbacks who broke
+about 2.7 points per game the rest of the way, and half of them ranked as top-12
+quarterbacks over the second half alone, even though they looked like backups at the
+cutoff. Every rank in this study uses second-half scoring only, so a hot first half
+cannot carry a player into the top 12 here. Quarterbacks who broke
 out gave back about 2.8 points per game but mostly stayed in the top 12. A hot start is
 partly real, and a slump is mostly not.
 
@@ -258,6 +260,68 @@ under the rule and all stayed elite, while Love counted as a hold and fell apart
 describes an average across three hundred seasons with a lot of spread around it. Treat it
 as a starting point, not a verdict.
 
+## Study 6: do first-half gaps predict a quarterback's rank over the second half alone?
+
+**The question.** Study 5 reported the share of players who ranked in the top 12 over the
+second half. This study makes that the whole focus. It asks whether any of three first-half
+gaps tells you where a quarterback will rank from week 8 on, when the ranking ignores
+everything he did before the cutoff. The three gaps are the luck gap from Study 5 (actual
+scoring minus what his own volume and yardage imply at league-average touchdown and
+interception rates), the team gap (actual scoring minus what his team's points per game
+imply), and the prior gap (actual scoring minus his scoring the season before).
+
+**The method.** The study covers 2010 through 2024 at a week 7 cutoff, with 413
+quarterback-seasons. Each player's second-half rank is his place by points per game over
+weeks 8 on, among every quarterback with at least four games and sixty attempts in that
+span. For each gap, the study sorts players into five groups and reports the average
+second-half rank and the share who ranked in the top 6, top 12, and top 24. It also asks
+whether each gap still matters once you account for the player's first-half scoring.
+
+**Finding 1. Hot starters do not fade. The luckiest group ranked near the top in the second half too.**
+
+| Luck gap | Players | Weeks 1–7 PPG | Weeks 8 on PPG | Average rank, weeks 8 on | Top 6 | Top 12 | Top 24 |
+|---|---|---|---|---|---|---|---|
+| Most negative (−3.1) | 83 | 12.1 | 14.1 | 21.8 | 7% | 18% | 55% |
+| −1.3 | 82 | 14.0 | 15.2 | 19.1 | 18% | 32% | 67% |
+| Near zero | 83 | 15.4 | 14.8 | 18.9 | 13% | 31% | 70% |
+| +1.6 | 82 | 18.3 | 17.2 | 13.4 | 24% | 48% | 90% |
+| Most positive (+3.9) | 83 | 21.7 | 19.5 | 9.5 | 41% | 73% | 94% |
+
+The quarterbacks with the best first-half luck averaged a rank of 9.5 over the second
+half and placed in the top 12 nearly three times out of four. They gave back about two
+points per game, but their first-half production did not carry them, because the second
+half on its own put them at the top. Once you account for first-half scoring, the luck gap
+has no relation to second-half rank at all. Within any band of first-half scoring, players
+with positive luck ranked as well as or better than players with negative luck. Among
+quarterbacks scoring 15 to 18 points per game, for example, the lucky half ranked in the top
+12 over the second half 45% of the time and the unlucky half 36%.
+
+**Finding 2. The team gap and the prior gap do carry information, in the opposite direction from the luck gap.**
+
+Once you account for first-half scoring, a quarterback who is scoring more than his team's
+points imply ranks a little worse in the second half, and a quarterback who is scoring more
+than he did last season ranks noticeably worse. The prior gap is the stronger of the two.
+
+| Prior gap | Players | Last season | Weeks 1–7 PPG | Weeks 8 on PPG | Average rank, weeks 8 on | Top 6 | Top 12 | Top 24 |
+|---|---|---|---|---|---|---|---|---|
+| Fell the most (−5.4) | 61 | 18.7 | 13.4 | 16.1 | 16.5 | 20% | 39% | 77% |
+| −2.1 | 60 | 17.8 | 15.8 | 15.6 | 17.7 | 18% | 30% | 73% |
+| About the same | 60 | 16.4 | 16.4 | 15.3 | 19.1 | 15% | 32% | 70% |
+| +2.3 | 60 | 16.2 | 18.4 | 16.9 | 14.5 | 20% | 42% | 85% |
+| Rose the most (+6.3) | 60 | 14.8 | 21.1 | 18.3 | 12.5 | 37% | 62% | 87% |
+
+The group that fell furthest from last season scored the least in the first half, yet
+ranked better in the second half than the two groups above them. A quarterback at 13.4
+points per game who had scored 18.7 the year before ranked, on average, 16.5 over the
+second half, while a quarterback at 16.4 points per game who was simply repeating last
+season ranked 19.1.
+
+**What this means.** The luck gap identifies no one. A quarterback whose scoring comes from
+a high touchdown rate keeps ranking well, and a quarterback whose scoring is held down by
+a low one keeps ranking poorly. Last season's scoring is the number that moves the second-
+half ranking, and it moves it in both directions: a proven quarterback in a slump climbs,
+and a quarterback with no track record who has broken out slips.
+
 ## Reproduce
 
 ```
@@ -267,6 +331,7 @@ python3 qb_vs_pointdiff.py         # Study 2
 python3 pointdiff_predicts_qb.py   # Study 3
 python3 expected_qb_ppg.py         # Study 4
 python3 qb_buy_low.py 7            # Study 5, with the cutoff week as the argument
+python3 qb_gap_vs_second_half_rank.py 7   # Study 6
 ```
 
 The raw nflverse files are not committed. Place them in `data/` from these addresses:
