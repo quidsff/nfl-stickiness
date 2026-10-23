@@ -363,6 +363,67 @@ is no reason to replace it. The caution from Study 6 still stands: a low number 
 season can mean a weak player, a good player on a weak team, or a good player who missed
 time, and the study does not tell those apart.
 
+## Study 8 (pilot): which to-date statistic best predicts a single game?
+
+**The question.** Before a game is played, which of these gaps between the two teams best
+predicts who wins: the gap in point differential, the gap in point differential after
+adjusting for the strength of each team's past opponents, or the gap after adjusting
+offense and defense separately against what each team's opponents normally allow and
+score? Each statistic uses only games played before that week.
+
+**The method.** The pilot covers every regular-season game from 2016 through 2024 in
+weeks 4 through 18, which is 1,920 games once ties are dropped. Each gap is computed as
+home team minus away team. Three reference points are included: the gap in win percentage,
+home field alone, and the Vegas spread, which is the best public predictor and shows how
+close any simple statistic comes to the ceiling. Each predictor is scored three ways: how
+closely it tracks the final margin, how well it ranks winners above losers, and how often
+it picks the winner.
+
+**Finding 1. The two adjusted versions turn out to be the same number.** Adjusting a
+team's point differential for its opponents' point differential, and adjusting its
+offense and defense separately against its opponents' defense and offense, produce
+identical results, because the two calculations reduce to the same arithmetic. So the
+pilot really compares two things: raw point differential and schedule-adjusted point
+differential.
+
+**Finding 2. The raw gap predicts better than the adjusted gap, and the Vegas spread beats both.**
+
+| Predictor | Tracks the margin | Ranks winners above losers | Picks the winner |
+|---|---|---|---|
+| Vegas spread | 0.46 | 0.74 | 68.1% |
+| Raw point differential gap | 0.37 | 0.68 | 63.0% |
+| Win percentage gap | 0.34 | 0.67 | 62.5% |
+| Schedule-adjusted gap | 0.35 | 0.67 | 61.9% |
+| Home field alone | — | 0.50 | 55.3% |
+
+Adjusting for schedule makes the prediction slightly worse, not better. The adjustment
+adds noise early in the season, when each opponent's own record rests on only a few
+games, and the two versions agree so closely (0.93) that there is little room for the
+adjustment to help. Combining the raw gap with the adjusted gap does not improve on the
+raw gap alone. Adding the raw gap to the Vegas spread does not improve on the spread
+alone, which means the spread already contains everything point differential knows.
+
+**Finding 3. All of the statistics get better as the season goes on, and the raw gap overtakes win percentage once teams have played about seven games.**
+
+| Weeks | Raw gap | Adjusted gap | Win percentage gap | Vegas spread |
+|---|---|---|---|---|
+| 4–7 | 56.3% | 55.7% | 59.0% | 63.3% |
+| 8–11 | 65.4% | 63.0% | 60.4% | 67.8% |
+| 12–18 | 65.4% | 64.7% | 65.6% | 71.1% |
+
+Through week 7 none of the three statistics does much better than picking the home team,
+and win percentage does best of the three. From week 8 on, the raw point differential gap
+picks the winner about 65% of the time, five points better than win percentage in the
+middle of the season and equal to it late.
+
+**What this means.** For predicting one game, the plainest version of point differential
+is the best of the statistics tested, and fancier adjustments do not earn their
+complexity. The five-point gap between the raw statistic and the Vegas spread is the
+room that injuries, quarterback changes, rest, and weather account for. A natural next
+step for the full study is to add the earlier seasons back to 1999, test a Pythagorean
+version of expected wins, and check whether weighting recent games more heavily closes
+any of the gap to the spread.
+
 ## Reproduce
 
 ```
@@ -374,6 +435,8 @@ python3 expected_qb_ppg.py         # Study 4
 python3 qb_buy_low.py 7            # Study 5, with the cutoff week as the argument
 python3 qb_gap_vs_second_half_rank.py 7   # Study 6
 python3 qb_track_record.py 7       # Study 7
+python3 bounce_back_2026.py        # applies Studies 5-7 to the current season
+python3 matchup_pilot.py 2016 2024 # Study 8 pilot
 ```
 
 The raw nflverse files are not committed. Place them in `data/` from these addresses:
