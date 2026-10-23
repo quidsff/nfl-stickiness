@@ -322,6 +322,47 @@ a low one keeps ranking poorly. Last season's scoring is the number that moves t
 half ranking, and it moves it in both directions: a proven quarterback in a slump climbs,
 and a quarterback with no track record who has broken out slips.
 
+## Study 7: how should "track record" be defined?
+
+**The question.** Studies 5 and 6 define a quarterback's track record as his points per
+game over the previous season, counted if he played at least eight games. That is a thin
+definition. It lets in a partial season cut short by injury, and it ignores anything older
+than one year. This study tests whether a fuller definition works better.
+
+**The method.** Four definitions were compared: last season with at least eight games
+(the original), last season with at least fourteen games, the best of the previous two
+seasons, and the best of the previous three seasons. Each was used to build the gap
+between a player's first-half scoring and his prior level, and each gap was tested
+against second-half scoring and second-half rank, with first-half scoring accounted for.
+The cutoff is week 7. Because the data begin in 2010, the two- and three-season
+definitions start from 2012 and 2013.
+
+**The finding. The fuller definitions do no better, and the three-season version does worse.**
+
+| Definition | Players | Improvement in explaining second-half scoring, beyond first-half scoring | Reliable? |
+|---|---|---|---|
+| Last season, 8+ games | 301 | 0.300 → 0.329 | Yes |
+| Last season, 14+ games | 229 | 0.309 → 0.336 | Yes |
+| Best of previous two seasons | 299 | 0.272 → 0.295 | Yes |
+| Best of previous three seasons | 277 | 0.252 → 0.266 | Weakly |
+
+On the 202 seasons where all four definitions can be computed, the first three are
+nearly identical and the three-season version falls behind and loses reliability. Reaching
+further back adds noise rather than signal, because a quarterback's level three years ago
+has less to do with his level now than last season does. Requiring a full season drops
+a quarter of the sample without improving the result.
+
+The groups sorted by the three-season definition tell the same story as before. Players
+scoring furthest below their best recent season gained 2.8 points per game over the
+second half and ranked 16 on average, better than the two groups just above them, while
+players scoring furthest above their best recent season gave back 2.7 points per game.
+
+**What this means.** The simple definition holds up. Last season's points per game, with
+the eight-game minimum, is the right version of track record for this purpose, and there
+is no reason to replace it. The caution from Study 6 still stands: a low number from last
+season can mean a weak player, a good player on a weak team, or a good player who missed
+time, and the study does not tell those apart.
+
 ## Reproduce
 
 ```
@@ -332,6 +373,7 @@ python3 pointdiff_predicts_qb.py   # Study 3
 python3 expected_qb_ppg.py         # Study 4
 python3 qb_buy_low.py 7            # Study 5, with the cutoff week as the argument
 python3 qb_gap_vs_second_half_rank.py 7   # Study 6
+python3 qb_track_record.py 7       # Study 7
 ```
 
 The raw nflverse files are not committed. Place them in `data/` from these addresses:
