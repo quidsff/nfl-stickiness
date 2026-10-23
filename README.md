@@ -102,6 +102,30 @@ quarterback's fantasy points come from offense alone while point differential al
 reflects the defense. As a rough exchange rate, one extra fantasy point per game from the
 quarterback goes with one extra point of team point differential per game.
 
+**A variation with six-point passing touchdowns.** Some leagues score passing and rushing
+touchdowns the same, at six points each. Rerunning the study under that rule
+(`python3 qb_vs_pointdiff.py 6`) moves the numbers up slightly and changes nothing about
+the conclusion.
+
+| Season | 4-point passing TD | 6-point passing TD | | Season | 4-point | 6-point |
+|---|---|---|---|---|---|---|
+| 2010 | 0.65 | 0.67 | | 2018 | 0.70 | 0.71 |
+| 2011 | 0.70 | 0.72 | | 2019 | 0.53 | 0.54 |
+| 2012 | 0.55 | 0.58 | | 2020 | 0.47 | 0.50 |
+| 2013 | 0.77 | 0.76 | | 2021 | 0.73 | 0.75 |
+| 2014 | 0.67 | 0.67 | | 2022 | 0.57 | 0.60 |
+| 2015 | 0.38 | 0.38 | | 2023 | 0.62 | 0.64 |
+| 2016 | 0.63 | 0.64 | | 2024 | 0.80 | 0.81 |
+| 2017 | 0.64 | 0.67 | | **Average** | **0.63** | **0.64** |
+
+The correlation rises by about 0.01 to 0.03 in most seasons and never falls by more than
+0.01. That makes sense. Six-point passing touchdowns give more weight to the part of a
+quarterback's line that most directly produces team points, so his fantasy score tracks
+team scoring a little more closely. The correlation with points scored rises from 0.76 to
+0.79. The exchange rate changes too: under six-point scoring, one extra quarterback fantasy
+point per game goes with about 0.8 points of team point differential, because each
+touchdown now carries more fantasy points.
+
 ## Study 3: does a team's early point differential predict its quarterback's fantasy scoring later in the season?
 
 **The method.** For each team and season from 2010 through 2024, the study took the team's

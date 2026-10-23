@@ -9,7 +9,8 @@ Two QB definitions per team-season:
        QB slot actually delivered regardless of who played)
 Point differential per game uses the full regular season from games.csv.
 """
-import pandas as pd, numpy as np, os, glob
+import pandas as pd, numpy as np, os, glob, sys
+PASS_TD = int(sys.argv[1]) if len(sys.argv) > 1 else 4   # points per passing TD (4 = traditional, 6 = equal to rushing)
 from scipy.stats import pearsonr, spearmanr
 
 HERE = os.path.dirname(os.path.abspath(__file__)); DATA = os.path.join(HERE, "data")
@@ -18,6 +19,8 @@ RENAME = {"SD": "LAC", "OAK": "LV", "STL": "LA"}
 ps = pd.concat([pd.read_csv(f, low_memory=False) for f in sorted(glob.glob(os.path.join(DATA, "ps_*.csv")))])
 ps = ps[(ps.season_type == "REG") & (ps.position == "QB")].copy()
 ps["recent_team"] = ps["recent_team"].replace(RENAME)
+ps["fantasy_points"] = ps["fantasy_points"] + (PASS_TD - 4) * ps["passing_tds"].fillna(0)
+print(f"Scoring: {PASS_TD} points per passing TD\n")
 
 games = pd.read_csv(os.path.join(DATA, "games.csv"))
 games = games[(games.game_type == "REG") & games.season.between(2010, 2024)].copy()
@@ -56,5 +59,5 @@ lr = linregress(res.season, res.r_qb1_pd)
 print(f"\ntrend in r(QB1 ppg, point diff): {lr.slope:+.4f} per season, p={lr.pvalue:.2f}")
 print("\nslope: each +1 QB1 fantasy point per game ~ {:+.2f} team point diff per game (pooled)".format(
     np.polyfit(df.qb1_ppg, df.pd_pg, 1)[0]))
-res.to_csv(os.path.join(HERE, "qb_vs_pointdiff_by_season.csv"), index=False)
-df.to_csv(os.path.join(HERE, "qb_vs_pointdiff_teams.csv"), index=False)
+res.to_csv(os.path.join(HERE, f"qb_vs_pointdiff_by_season_{PASS_TD}pt.csv"), index=False)
+df.to_csv(os.path.join(HERE, "qb_vs_pointdiff_teams.csv" if PASS_TD == 4 else f"qb_vs_pointdiff_teams_{PASS_TD}pt.csv"), index=False)
