@@ -2,3 +2,4 @@ data/games.csv
 data/pbp_*.csv.gz
 __pycache__/
 data/ps_*.csv
+data/spw_*.csv
