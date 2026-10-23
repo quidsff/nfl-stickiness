@@ -131,3 +131,24 @@ correlated with the team's full-season point differential per game.
 
 Reading for fantasy: if two QBs have the same early-season fantasy PPG, take the one on the
 team with the better point differential.
+
+## Expected QB fantasy PPG from team context
+
+`expected_qb_ppg.py`. Pooled OLS on 468 team-seasons (2010–2024, QB1 with 8+ games,
+traditional scoring).
+
+| Model | Equation | R² | RMSE |
+|---|---|---|---|
+| A: point differential | QB PPG = 16.0 + 0.38 × (point diff / game) | 0.37 | 3.1 |
+| B: points scored | QB PPG = 0.8 + 0.67 × (team points / game) | 0.57 | 2.5 |
+| C: both | adds nothing over B (point-diff coefficient ≈ 0) | 0.58 | 2.5 |
+
+Points scored is the better predictor of QB fantasy output, by a lot: a team's point
+differential tells you about its defense too, which the QB doesn't get paid for.
+Rule of thumb: **expected QB1 PPG ≈ two-thirds of the team's points per game.** A 24
+ppg offense should carry a ~17 PPG QB; a 30 ppg offense a ~21 PPG QB. Typical miss ±2.5.
+
+`expected_qb_ppg.csv` has every QB1 2010–2024 with expected PPG and the residual
+(actual − expected). Positive residual = the QB produces more fantasy points than his
+team's scoring implies (rushing, high TD share); negative = the offense scores without
+him (run game, defense/special teams, short fields).
